@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import {
   Box,
@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
@@ -22,9 +23,18 @@ export default function Home() {
       text: "Hello! Welcome to Studyhub! How can I help you today?",
     },
   ]);
-
   const [message, setMessage] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const sendMessage = async () => {
     if (message.trim() === "") return;
@@ -36,6 +46,7 @@ export default function Home() {
     ];
     setMessages(newMessages);
     setMessage("");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/chat", {
@@ -68,6 +79,9 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Error fetching chat response:", error);
+    } finally {
+      setLoading(false);
+      scrollToBottom();
     }
   };
 
@@ -191,6 +205,12 @@ export default function Home() {
                   </Box>
                 </Box>
               ))}
+              {loading && (
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  <CircularProgress />
+                </Box>
+              )}
+              <div ref={messagesEndRef} />
             </Stack>
             <Stack
               direction="row"
@@ -250,7 +270,6 @@ export default function Home() {
               borderRadius={"10px"}
               sx={{
                 backgroundColor: darkMode ? "#1e1e1e" : "#ffffff",
-
                 padding: 3,
                 borderRadius: 2,
                 boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
