@@ -63,10 +63,4 @@ To deploy the application, consider using platforms such as Vercel or Netlify, w
 
 Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any inquiries or support, please contact [your-email@example.com](mailto:your-email@example.com).
